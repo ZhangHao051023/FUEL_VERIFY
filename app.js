@@ -1,20 +1,19 @@
 const STORAGE_KEY = "fuel-verify-records";
-const AI_ENDPOINT_KEY = "fuel-verify-ai-endpoint";
 
 const fuelForm = document.getElementById("fuel-form");
 const recordBody = document.getElementById("record-body");
 const tabButtons = document.querySelectorAll(".tab-btn");
 const panels = document.querySelectorAll(".tab-panel");
 const clearAllBtn = document.getElementById("clear-all");
+const generateAiBtn = document.getElementById("generate-ai");
+const aiOutputEl = document.getElementById("ai-output");
 
 const totalRecordsEl = document.getElementById("total-records");
 const totalLitreEl = document.getElementById("total-litre");
 const totalPriceEl = document.getElementById("total-price");
 const avgPriceEl = document.getElementById("avg-price");
-const aiEndpointInput = document.getElementById("ai-endpoint");
-const generateAiBtn = document.getElementById("generate-ai");
-const aiStatusEl = document.getElementById("ai-status");
-const aiOutputEl = document.getElementById("ai-output");
+
+const AI_ENDPOINT = window.FUEL_VERIFY_AI_ENDPOINT || "";
 
 let records = loadRecords();
 
@@ -56,16 +55,6 @@ function saveRecords() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
 }
 
-function loadAiEndpoint() {
-  if (!supportsStorage()) return "";
-  return localStorage.getItem(AI_ENDPOINT_KEY) || "";
-}
-
-function saveAiEndpoint(value) {
-  if (!supportsStorage()) return;
-  localStorage.setItem(AI_ENDPOINT_KEY, value);
-}
-
 function formatNumber(value) {
   return Number(value).toFixed(2);
 }
@@ -95,6 +84,65 @@ function renderOverview() {
   totalLitreEl.textContent = formatNumber(totalLitre);
   totalPriceEl.textContent = formatNumber(totalPrice);
   avgPriceEl.textContent = formatNumber(avgPrice);
+}
+
+function getOverviewSnapshot() {
+  const totalRecords = records.length;
+  const totalLitre = records.reduce((sum, item) => sum + Number(item.litre), 0);
+  const totalPrice = records.reduce((sum, item) => sum + Number(item.price), 0);
+  const avgPrice = totalLitre > 0 ? totalPrice / totalLitre : 0;
+
+  return {
+    totalRecords,
+    totalLitre: Number(formatNumber(totalLitre)),
+    totalPrice: Number(formatNumber(totalPrice)),
+    avgPricePerLitre: Number(formatNumber(avgPrice)),
+  };
+}
+
+async function requestAiInsight() {
+  if (!aiOutputEl) return;
+
+  if (!AI_ENDPOINT) {
+    aiOutputEl.textContent =
+      "Cloudflare AI is not configured yet. Set window.FUEL_VERIFY_AI_ENDPOINT in index.html or deploy the Worker and connect its URL.";
+    return;
+  }
+
+  if (records.length === 0) {
+    aiOutputEl.textContent = "Add at least one record before generating AI insight.";
+    return;
+  }
+
+  const payload = {
+    overview: getOverviewSnapshot(),
+    records: records.slice(0, 30),
+  };
+
+  aiOutputEl.textContent = "Generating insight from Cloudflare AI...";
+  if (generateAiBtn) generateAiBtn.disabled = true;
+
+  try {
+    const response = await fetch(AI_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    const aiText = data.insight || data.result || data.response || "No insight returned.";
+    aiOutputEl.textContent = String(aiText);
+  } catch (error) {
+    aiOutputEl.textContent = `Failed to get AI insight: ${error.message}`;
+  } finally {
+    if (generateAiBtn) generateAiBtn.disabled = false;
+  }
 }
 
 function renderRecords() {
@@ -127,62 +175,6 @@ function renderApp() {
   renderRecords();
 }
 
-function getRecordsForAi() {
-  return records.slice(0, 50).map((item) => ({
-    date: item.date,
-    location: item.location,
-    fuelType: item.fuelType,
-    litre: Number(item.litre),
-    price: Number(item.price),
-  }));
-}
-
-async function generateAiInsights() {
-  if (!aiEndpointInput || !aiStatusEl || !aiOutputEl || !generateAiBtn) return;
-
-  const endpoint = aiEndpointInput.value.trim();
-  if (!endpoint) {
-    aiStatusEl.textContent = "Please enter your Cloudflare Worker API URL first.";
-    return;
-  }
-
-  if (records.length === 0) {
-    aiStatusEl.textContent = "Add at least one record before generating AI insights.";
-    return;
-  }
-
-  saveAiEndpoint(endpoint);
-  generateAiBtn.disabled = true;
-  aiStatusEl.textContent = "Generating insights with Cloudflare AI...";
-  aiOutputEl.textContent = "";
-
-  try {
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        records: getRecordsForAi(),
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Request failed with status ${response.status}`);
-    }
-
-    const data = await response.json();
-    const output = typeof data.insights === "string" ? data.insights : JSON.stringify(data, null, 2);
-    aiStatusEl.textContent = "Insights ready.";
-    aiOutputEl.textContent = output;
-  } catch (error) {
-    aiStatusEl.textContent = "Failed to get AI insights. Check Worker URL and deployment.";
-    aiOutputEl.textContent = error instanceof Error ? error.message : "Unknown error";
-  } finally {
-    generateAiBtn.disabled = false;
-  }
-}
-
 function resetForm() {
   fuelForm.reset();
   const dateInput = document.getElementById("date");
@@ -196,10 +188,6 @@ if (fuelForm) {
   if (dateInput) {
     dateInput.value = new Date().toISOString().slice(0, 10);
   }
-}
-
-if (aiEndpointInput) {
-  aiEndpointInput.value = loadAiEndpoint();
 }
 
 fuelForm.addEventListener("submit", (event) => {
@@ -255,7 +243,7 @@ clearAllBtn.addEventListener("click", () => {
 
 if (generateAiBtn) {
   generateAiBtn.addEventListener("click", () => {
-    generateAiInsights();
+    requestAiInsight();
   });
 }
 
@@ -279,7 +267,6 @@ if (
   totalLitreEl &&
   totalPriceEl &&
   avgPriceEl &&
-  aiStatusEl &&
   aiOutputEl
 ) {
   renderApp();

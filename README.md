@@ -19,10 +19,10 @@ Users can key in:
 	- Total litre
 	- Total price
 	- Average price per litre
-- Generate Cloudflare AI insights from your records (via Worker endpoint)
 - See all records in the Record section
 - Remove one record or clear all records
 - Data is saved in browser localStorage
+- Cloudflare AI insights from your refueling history
 
 ## Run
 
@@ -31,40 +31,49 @@ Users can key in:
 
 ## Cloudflare AI Setup
 
-1. Install Wrangler:
+This project includes a Cloudflare Worker proxy so your API token stays secure server-side.
 
-	```bash
-	npm install -g wrangler
-	```
+### 1. Configure Worker
 
-2. Login to Cloudflare:
+- Edit `cloudflare/wrangler.toml`
+- Set `CLOUDFLARE_ACCOUNT_ID` in `[vars]`
 
-	```bash
-	wrangler login
-	```
+### 2. Set API Token as Secret
 
-3. Deploy worker in this folder:
+Run this in the `cloudflare` folder:
 
-	```bash
-	wrangler deploy
-	```
+`wrangler secret put CLOUDFLARE_API_TOKEN`
 
-4. Copy deployed Worker URL (for example `https://fuel-verify-ai.<subdomain>.workers.dev`).
-5. In app Overview section, paste the Worker URL in "Worker API URL".
-6. Click "Generate Insights".
+Use a token that can call Workers AI.
 
-### Local test for worker
+### 3. Deploy Worker
 
-```bash
-wrangler dev
-```
+From the `cloudflare` folder:
 
-Then use the local URL shown by Wrangler as the Worker API URL.
+`wrangler deploy`
+
+Copy the deployed Worker URL (example: `https://fuel-verify-ai.<subdomain>.workers.dev`).
+
+### 4. Connect Frontend to Worker
+
+Open `index.html` and set:
+
+`window.FUEL_VERIFY_AI_ENDPOINT = "YOUR_WORKER_URL";`
+
+Example:
+
+`window.FUEL_VERIFY_AI_ENDPOINT = "https://fuel-verify-ai.<subdomain>.workers.dev";`
+
+### 5. Use AI Insight in App
+
+- Add records in the app
+- Go to Overview
+- Click **Generate Insight**
 
 ## Files
 
 - `index.html` : App layout and sections
 - `styles.css` : Styling and responsive design
 - `app.js` : Form handling, storage, overview metrics, and records table
-- `worker.js` : Cloudflare Worker endpoint for AI insights
-- `wrangler.toml` : Cloudflare Worker configuration
+- `cloudflare/worker.js` : Cloudflare Worker proxy for Workers AI
+- `cloudflare/wrangler.toml` : Wrangler configuration for deployment

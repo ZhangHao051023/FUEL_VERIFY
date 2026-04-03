@@ -87,27 +87,16 @@
             </article>
           </div>
 
-          <section class="ai-card" aria-label="AI Insights">
-            <div class="ai-header">
+          <article class="ai-card">
+            <div class="ai-head">
               <h2>Cloudflare AI Insights</h2>
-              <p>Generate a quick spending summary and suggestions based on your records.</p>
+              <button id="generate-ai" type="button" class="ghost-btn">Generate Insight</button>
             </div>
-
-            <div class="ai-controls">
-              <label>
-                Worker API URL
-                <input
-                  type="url"
-                  id="ai-endpoint"
-                  placeholder="https://your-worker.your-subdomain.workers.dev"
-                />
-              </label>
-              <button id="generate-ai" type="button">Generate Insights</button>
-            </div>
-
-            <p id="ai-status" class="ai-status">Set your Worker URL, then click Generate Insights.</p>
-            <pre id="ai-output" class="ai-output" aria-live="polite"></pre>
-          </section>
+            <p class="ai-subtitle">
+              Uses your records to generate quick suggestions on spending and refueling patterns.
+            </p>
+            <pre id="ai-output" class="ai-output">No AI insight yet. Add some records, then click Generate Insight.</pre>
+          </article>
         </div>
 
         <div id="records" class="tab-panel" role="tabpanel">
@@ -140,6 +129,9 @@
       </section>
     </main>
 
+    <script>
+      window.FUEL_VERIFY_AI_ENDPOINT = "";
+    </script>
     <script src="app.js"></script>
   </body>
 </html>

@@ -206,57 +206,40 @@ button[type="submit"]:hover {
 }
 
 .ai-card {
-  margin-top: 0.95rem;
+  margin-top: 0.9rem;
   background: #fff;
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 0.95rem;
+  padding: 0.9rem;
 }
 
-.ai-header h2 {
-  margin: 0;
-  font-size: 1.05rem;
-}
-
-.ai-header p {
-  margin: 0.35rem 0 0;
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-
-.ai-controls {
-  margin-top: 0.7rem;
-  display: grid;
-  grid-template-columns: 1fr auto;
+.ai-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 0.7rem;
-  align-items: end;
 }
 
-.ai-controls label {
-  display: grid;
-  gap: 0.35rem;
-  font-size: 0.9rem;
-  color: var(--muted);
+.ai-head h2 {
+  margin: 0;
+  font-size: 1.1rem;
 }
 
-.ai-status {
-  margin: 0.75rem 0 0;
+.ai-subtitle {
+  margin: 0.55rem 0 0;
   color: var(--muted);
   font-size: 0.9rem;
 }
 
 .ai-output {
-  margin: 0.5rem 0 0;
-  min-height: 90px;
-  max-height: 320px;
-  overflow: auto;
-  white-space: pre-wrap;
+  margin: 0.75rem 0 0;
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 0.7rem;
-  background: #fffcf7;
-  font-family: "Space Grotesk", sans-serif;
-  line-height: 1.4;
+  border-radius: 10px;
+  padding: 0.75rem;
+  background: #fffcf8;
+  color: var(--ink);
+  min-height: 130px;
+  white-space: pre-wrap;
 }
 
 .records-header {
@@ -372,7 +355,8 @@ tr:last-child td {
     grid-template-columns: 1fr;
   }
 
-  .ai-controls {
-    grid-template-columns: 1fr;
+  .ai-head {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
