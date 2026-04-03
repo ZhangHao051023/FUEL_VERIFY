@@ -86,6 +86,28 @@
               <h3 id="avg-price">0.00</h3>
             </article>
           </div>
+
+          <section class="ai-card" aria-label="AI Insights">
+            <div class="ai-header">
+              <h2>Cloudflare AI Insights</h2>
+              <p>Generate a quick spending summary and suggestions based on your records.</p>
+            </div>
+
+            <div class="ai-controls">
+              <label>
+                Worker API URL
+                <input
+                  type="url"
+                  id="ai-endpoint"
+                  placeholder="https://your-worker.your-subdomain.workers.dev/insights"
+                />
+              </label>
+              <button id="generate-ai" type="button">Generate Insights</button>
+            </div>
+
+            <p id="ai-status" class="ai-status">Set your Worker URL, then click Generate Insights.</p>
+            <pre id="ai-output" class="ai-output" aria-live="polite"></pre>
+          </section>
         </div>
 
         <div id="records" class="tab-panel" role="tabpanel">

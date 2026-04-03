@@ -205,6 +205,60 @@ button[type="submit"]:hover {
   font-family: "DM Serif Display", serif;
 }
 
+.ai-card {
+  margin-top: 0.95rem;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.95rem;
+}
+
+.ai-header h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.ai-header p {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.ai-controls {
+  margin-top: 0.7rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.7rem;
+  align-items: end;
+}
+
+.ai-controls label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.ai-status {
+  margin: 0.75rem 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.ai-output {
+  margin: 0.5rem 0 0;
+  min-height: 90px;
+  max-height: 320px;
+  overflow: auto;
+  white-space: pre-wrap;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.7rem;
+  background: #fffcf7;
+  font-family: "Space Grotesk", sans-serif;
+  line-height: 1.4;
+}
+
 .records-header {
   display: flex;
   align-items: center;
@@ -315,6 +369,10 @@ tr:last-child td {
   }
 
   .overview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ai-controls {
     grid-template-columns: 1fr;
   }
 }

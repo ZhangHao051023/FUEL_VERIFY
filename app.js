@@ -1,4 +1,5 @@
 const STORAGE_KEY = "fuel-verify-records";
+const AI_ENDPOINT_KEY = "fuel-verify-ai-endpoint";
 
 const fuelForm = document.getElementById("fuel-form");
 const recordBody = document.getElementById("record-body");
@@ -10,6 +11,10 @@ const totalRecordsEl = document.getElementById("total-records");
 const totalLitreEl = document.getElementById("total-litre");
 const totalPriceEl = document.getElementById("total-price");
 const avgPriceEl = document.getElementById("avg-price");
+const aiEndpointInput = document.getElementById("ai-endpoint");
+const generateAiBtn = document.getElementById("generate-ai");
+const aiStatusEl = document.getElementById("ai-status");
+const aiOutputEl = document.getElementById("ai-output");
 
 let records = loadRecords();
 
@@ -49,6 +54,16 @@ function loadRecords() {
 function saveRecords() {
   if (!supportsStorage()) return;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+}
+
+function loadAiEndpoint() {
+  if (!supportsStorage()) return "";
+  return localStorage.getItem(AI_ENDPOINT_KEY) || "";
+}
+
+function saveAiEndpoint(value) {
+  if (!supportsStorage()) return;
+  localStorage.setItem(AI_ENDPOINT_KEY, value);
 }
 
 function formatNumber(value) {
@@ -112,6 +127,62 @@ function renderApp() {
   renderRecords();
 }
 
+function getRecordsForAi() {
+  return records.slice(0, 50).map((item) => ({
+    date: item.date,
+    location: item.location,
+    fuelType: item.fuelType,
+    litre: Number(item.litre),
+    price: Number(item.price),
+  }));
+}
+
+async function generateAiInsights() {
+  if (!aiEndpointInput || !aiStatusEl || !aiOutputEl || !generateAiBtn) return;
+
+  const endpoint = aiEndpointInput.value.trim();
+  if (!endpoint) {
+    aiStatusEl.textContent = "Please enter your Cloudflare Worker API URL first.";
+    return;
+  }
+
+  if (records.length === 0) {
+    aiStatusEl.textContent = "Add at least one record before generating AI insights.";
+    return;
+  }
+
+  saveAiEndpoint(endpoint);
+  generateAiBtn.disabled = true;
+  aiStatusEl.textContent = "Generating insights with Cloudflare AI...";
+  aiOutputEl.textContent = "";
+
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        records: getRecordsForAi(),
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+
+    const data = await response.json();
+    const output = typeof data.insights === "string" ? data.insights : JSON.stringify(data, null, 2);
+    aiStatusEl.textContent = "Insights ready.";
+    aiOutputEl.textContent = output;
+  } catch (error) {
+    aiStatusEl.textContent = "Failed to get AI insights. Check Worker URL and deployment.";
+    aiOutputEl.textContent = error instanceof Error ? error.message : "Unknown error";
+  } finally {
+    generateAiBtn.disabled = false;
+  }
+}
+
 function resetForm() {
   fuelForm.reset();
   const dateInput = document.getElementById("date");
@@ -125,6 +196,10 @@ if (fuelForm) {
   if (dateInput) {
     dateInput.value = new Date().toISOString().slice(0, 10);
   }
+}
+
+if (aiEndpointInput) {
+  aiEndpointInput.value = loadAiEndpoint();
 }
 
 fuelForm.addEventListener("submit", (event) => {
@@ -178,6 +253,12 @@ clearAllBtn.addEventListener("click", () => {
   renderApp();
 });
 
+if (generateAiBtn) {
+  generateAiBtn.addEventListener("click", () => {
+    generateAiInsights();
+  });
+}
+
 for (const button of tabButtons) {
   button.addEventListener("click", () => {
     tabButtons.forEach((item) => item.classList.remove("active"));
@@ -190,7 +271,17 @@ for (const button of tabButtons) {
   });
 }
 
-if (fuelForm && recordBody && clearAllBtn && totalRecordsEl && totalLitreEl && totalPriceEl && avgPriceEl) {
+if (
+  fuelForm &&
+  recordBody &&
+  clearAllBtn &&
+  totalRecordsEl &&
+  totalLitreEl &&
+  totalPriceEl &&
+  avgPriceEl &&
+  aiStatusEl &&
+  aiOutputEl
+) {
   renderApp();
 } else {
   console.error("Fuel Verify initialization failed: missing required DOM elements.");
