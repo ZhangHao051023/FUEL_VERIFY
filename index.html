@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fuel Verify</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="bg-shape bg-shape-1"></div>
+    <div class="bg-shape bg-shape-2"></div>
+
+    <main class="app-shell">
+      <header class="app-header">
+        <p class="kicker">Fuel Verify</p>
+        <h1>Refueling Tracker</h1>
+        <p class="subtitle">Track every top-up and see your fuel spending at a glance.</p>
+      </header>
+
+      <section class="input-card">
+        <h2>Add Refueling Record</h2>
+        <form id="fuel-form" class="fuel-form">
+          <label>
+            Date
+            <input type="date" id="date" required />
+          </label>
+
+          <label>
+            Location
+            <input type="text" id="location" placeholder="e.g. Shell Damansara" required />
+          </label>
+
+          <label>
+            Fuel Type
+            <select id="fuelType" required>
+              <option value="" selected disabled>Select fuel type</option>
+              <option>RON95</option>
+              <option>RON97</option>
+              <option>Diesel</option>
+              <option>EV Charging</option>
+              <option>Other</option>
+            </select>
+          </label>
+
+          <label>
+            Litre
+            <input type="number" id="litre" min="0" step="0.01" placeholder="0.00" required />
+          </label>
+
+          <label>
+            Price
+            <input type="number" id="price" min="0" step="0.01" placeholder="0.00" required />
+          </label>
+
+          <button type="submit">Save Record</button>
+        </form>
+      </section>
+
+      <section class="tabs-card">
+        <nav class="tabs" aria-label="Sections">
+          <button class="tab-btn active" data-tab="overview" type="button">Overview</button>
+          <button class="tab-btn" data-tab="records" type="button">Record</button>
+        </nav>
+
+        <div id="overview" class="tab-panel active" role="tabpanel">
+          <div class="overview-grid">
+            <article class="metric-card">
+              <p>Total Records</p>
+              <h3 id="total-records">0</h3>
+            </article>
+            <article class="metric-card">
+              <p>Total Litre</p>
+              <h3 id="total-litre">0.00</h3>
+            </article>
+            <article class="metric-card">
+              <p>Total Price</p>
+              <h3 id="total-price">0.00</h3>
+            </article>
+            <article class="metric-card">
+              <p>Average Price / Litre</p>
+              <h3 id="avg-price">0.00</h3>
+            </article>
+          </div>
+        </div>
+
+        <div id="records" class="tab-panel" role="tabpanel">
+          <div class="records-header">
+            <h2>Refueling Records</h2>
+            <button id="clear-all" type="button" class="ghost-btn">Clear All</button>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Location</th>
+                  <th>Fuel Type</th>
+                  <th>Litre</th>
+                  <th>Price</th>
+                  <th>Price / Litre</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="record-body">
+                <tr>
+                  <td colspan="7" class="empty-state">No records yet. Add your first one above.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
