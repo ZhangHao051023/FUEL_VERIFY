@@ -63,10 +63,6 @@ function computeAnalysis(records) {
   };
 }
 
-addEventListener("fetch", (event) => {
-  event.respondWith(handleRequest(event.request));
-});
-
 async function handleRequest(request) {
   const url = new URL(request.url);
 
@@ -124,3 +120,9 @@ async function handleRequest(request) {
     headers: { "content-type": "application/json", "Access-Control-Allow-Origin": "*" },
   });
 }
+
+export default {
+  async fetch(request) {
+    return handleRequest(request);
+  },
+};
