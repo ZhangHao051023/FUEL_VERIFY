@@ -1,5 +1,7 @@
 export default {
   async fetch(request, env) {
+    const url = new URL(request.url);
+
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -10,9 +12,30 @@ export default {
       return new Response(null, { status: 204, headers: corsHeaders });
     }
 
+    if (request.method === "GET") {
+      return new Response(
+        JSON.stringify({
+          ok: true,
+          message: "Fuel Verify AI Worker is running. Send POST with { records: [...] } to / or /insights.",
+          path: url.pathname,
+        }),
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
     if (request.method !== "POST") {
       return new Response(JSON.stringify({ error: "Method not allowed" }), {
         status: 405,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      });
+    }
+
+    if (url.pathname !== "/" && url.pathname !== "/insights") {
+      return new Response(JSON.stringify({ error: "Route not found" }), {
+        status: 404,
         headers: { "Content-Type": "application/json", ...corsHeaders },
       });
     }

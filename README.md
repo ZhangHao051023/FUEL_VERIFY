@@ -49,7 +49,7 @@ Users can key in:
 	wrangler deploy
 	```
 
-4. Copy deployed URL and add `/insights` path if needed by your route setup.
+4. Copy deployed Worker URL (for example `https://fuel-verify-ai.<subdomain>.workers.dev`).
 5. In app Overview section, paste the Worker URL in "Worker API URL".
 6. Click "Generate Insights".
 
