@@ -115,6 +115,23 @@ async function handleRequest(request) {
     });
   }
 
+  if (url.pathname === "/" && request.method === "GET") {
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FUEL_VERIFY</title></head>
+<body style="font-family:Arial,sans-serif;margin:2rem;">
+  <h1>FUEL_VERIFY API</h1>
+  <p>This Worker hosts fuel price + record analytics API for Malaysia.</p>
+  <ul>
+    <li><strong>GET /api/price?location=&lt;loc&gt;&fuelType=&lt;RON95|RON97|Diesel&gt;</strong></li>
+    <li><strong>POST /api/record</strong> with JSON { location, fuelType, litre, notes?, history? }</strong></li>
+  </ul>
+  <p>Use the local web UI (in /web folder) and set Worker endpoint under Settings, or install static hosting for UI.</p>
+</body>
+</html>`;
+    return new Response(html, { status: 200, headers: { "content-type": "text/html; charset=utf-8", "Access-Control-Allow-Origin": "*" } });
+  }
+
   return new Response(JSON.stringify({ error: "Not found" }), {
     status: 404,
     headers: { "content-type": "application/json", "Access-Control-Allow-Origin": "*" },
