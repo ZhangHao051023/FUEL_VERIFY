@@ -1,6 +1,0 @@
-name = "fuel-verify-ai"
-main = "worker.js"
-compatibility_date = "2026-04-03"
-
-[vars]
-CLOUDFLARE_ACCOUNT_ID = ""

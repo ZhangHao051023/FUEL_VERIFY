@@ -33,6 +33,7 @@ Users can key in:
 ## Node + Cloudflare AI Setup
 
 This project now uses a Node.js backend proxy so your Cloudflare API token stays server-side.
+No Wrangler is required.
 
 ### 1. Install dependencies
 
@@ -47,6 +48,8 @@ Copy `.env.example` to `.env` and set:
 - `CLOUDFLARE_ACCOUNT_ID`
 - `CLOUDFLARE_API_TOKEN`
 - `PORT` (optional, default is 8787)
+
+Important: keep real credentials only in `.env`, never in `.env.example`.
 
 ### 3. Start server
 
