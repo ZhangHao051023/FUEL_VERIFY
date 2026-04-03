@@ -1,8 +1,0 @@
-name = "fuel-verify"
-main = "src/index.js"
-compatibility_date = "2026-01-01"
-
-# still ES module worker default for Wrangler 4; service worker syntax removes addEventListener usage above.
-
-[vars]
-COLLECTAPI_KEY = ""  # Set your CollectAPI key in Cloudflare dashboard or wrangler secret
