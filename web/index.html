@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FUEL_VERIFY</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>FUEL_VERIFY</h1>
+    <nav>
+      <button data-section="overview" class="active">Overview</button>
+      <button data-section="records">Records</button>
+      <button data-section="report">Report</button>
+      <button data-section="analytic">Analytic</button>
+      <button data-section="setting">Setting</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="overview" class="panel visible">
+      <h2>Overview</h2>
+      <p>Track fuel usage and perform analysis after each refueling. data is for Malaysia fuel types and location-aware pricing.</p>
+      <p>Current records: <span id="total-count">0</span></p>
+      <p>Average cost/litre: <span id="avg-per-litre">0</span></p>
+    </section>
+
+    <section id="records" class="panel">
+      <h2>Records</h2>
+      <form id="record-form">
+        <input type="text" id="location" placeholder="Location (e.g., Kuala Lumpur)" required />
+        <select id="fuel-type" required>
+          <option value="RON95">RON95</option>
+          <option value="RON97">RON97</option>
+          <option value="Diesel">Diesel</option>
+        </select>
+        <input type="number" step="0.01" min="0" id="litre" placeholder="Litres" required />
+        <input type="text" id="notes" placeholder="Notes (optional)" />
+        <button type="submit">Add Refuel Record</button>
+      </form>
+      <div class="record-info" id="record-info"></div>
+      <table id="records-table">
+        <thead><tr><th>Time</th><th>Location</th><th>Fuel</th><th>Litres</th><th>Unit Price (RM)</th><th>Cost (RM)</th><th>Notes</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section id="report" class="panel">
+      <h2>Report</h2>
+      <pre id="report-details">No report yet. Add records to generate.</pre>
+    </section>
+
+    <section id="analytic" class="panel">
+      <h2>Analytic</h2>
+      <pre id="analytic-details">No analytics yet.</pre>
+    </section>
+
+    <section id="setting" class="panel">
+      <h2>Setting</h2>
+      <p>Cloudflare Worker Endpoint:</p>
+      <input type="text" id="worker-endpoint" placeholder="https://your-worker.workers.dev" value="" />
+      <p>Fuel price fallback: RON95 2.15, RON97 2.55, Diesel 2.05</p>
+      <button id="save-settings-btn">Save Settings</button>
+      <p id="settings-status"></p>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

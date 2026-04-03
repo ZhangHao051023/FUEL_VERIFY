@@ -1,0 +1,6 @@
+name = "fuel_verify"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
+
+[vars]
+COLLECTAPI_KEY = ""  # Set your CollectAPI key in Cloudflare dashboard or wrangler secret

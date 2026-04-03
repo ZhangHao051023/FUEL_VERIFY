@@ -1,0 +1,16 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Arial, sans-serif; background: #f7f7f7; color: #1f2937; }
+header { background: #08375a; color: #ffffff; padding: 16px; display: flex; align-items: center; justify-content: space-between; }
+header h1 { margin: 0; font-size: 1.4rem; }
+nav button { margin-left: 8px; padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; background: #ffffff; color: #08375a; }
+nav button.active { background: #1d4ed8; color: #fff; }
+main { padding: 16px; }
+.panel { display: none; background: #fff; padding: 16px; border-radius: 8px; box-shadow: 0 1px 5px rgba(0,0,0,0.13); }
+.panel.visible { display: block; }
+#record-form { margin-bottom: 16px; display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 8px; }
+#record-form input, #record-form select, #record-form button, #worker-endpoint { padding: 10px; border: 1px solid #cccccc; border-radius: 4px; }
+#records-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+#records-table th, #records-table td { border: 1px solid #dddddd; padding: 8px; text-align: left; }
+#records-table th { background: #eef2ff; }
+.record-info { margin-bottom: 8px; color: #1f2937; }
+pre { background: #f3f4f6; padding: 12px; border-radius: 6px; white-space: pre-wrap; }
