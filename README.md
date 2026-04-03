@@ -30,10 +30,20 @@ Users can key in:
 2. Start server with `npm start`.
 3. Open `http://localhost:8787` in your browser.
 
+## Cloudflare Deploy (Wrangler)
+
+This repository now includes `wrangler.jsonc` and `worker.js` so `npx wrangler deploy` works without uploading `node_modules`.
+
+Cloudflare deploy requirements:
+
+- Set Worker secret `CLOUDFLARE_API_TOKEN`
+- Set Worker variable `CLOUDFLARE_ACCOUNT_ID`
+
+Static files are served from `public/`, and AI requests go to `/api/ai-insight` on the same Worker.
+
 ## Node + Cloudflare AI Setup
 
 This project now uses a Node.js backend proxy so your Cloudflare API token stays server-side.
-No Wrangler is required.
 
 ### 1. Install dependencies
 
