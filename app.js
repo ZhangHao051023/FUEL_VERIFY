@@ -13,7 +13,7 @@ const totalLitreEl = document.getElementById("total-litre");
 const totalPriceEl = document.getElementById("total-price");
 const avgPriceEl = document.getElementById("avg-price");
 
-const AI_ENDPOINT = window.FUEL_VERIFY_AI_ENDPOINT || "";
+const AI_ENDPOINT = window.FUEL_VERIFY_AI_ENDPOINT || "/api/ai-insight";
 
 let records = loadRecords();
 
@@ -105,7 +105,7 @@ async function requestAiInsight() {
 
   if (!AI_ENDPOINT) {
     aiOutputEl.textContent =
-      "Cloudflare AI is not configured yet. Set window.FUEL_VERIFY_AI_ENDPOINT in index.html or deploy the Worker and connect its URL.";
+      "AI endpoint is not configured. Set window.FUEL_VERIFY_AI_ENDPOINT in index.html.";
     return;
   }
 

@@ -26,45 +26,43 @@ Users can key in:
 
 ## Run
 
-1. Open `index.html` in your browser.
-2. Start entering refueling details.
+1. Install dependencies with `npm install`.
+2. Start server with `npm start`.
+3. Open `http://localhost:8787` in your browser.
 
-## Cloudflare AI Setup
+## Node + Cloudflare AI Setup
 
-This project includes a Cloudflare Worker proxy so your API token stays secure server-side.
+This project now uses a Node.js backend proxy so your Cloudflare API token stays server-side.
 
-### 1. Configure Worker
+### 1. Install dependencies
 
-- Edit `cloudflare/wrangler.toml`
-- Set `CLOUDFLARE_ACCOUNT_ID` in `[vars]`
+Run in project root:
 
-### 2. Set API Token as Secret
+`npm install`
 
-Run this in the `cloudflare` folder:
+### 2. Configure environment variables
 
-`wrangler secret put CLOUDFLARE_API_TOKEN`
+Copy `.env.example` to `.env` and set:
 
-Use a token that can call Workers AI.
+- `CLOUDFLARE_ACCOUNT_ID`
+- `CLOUDFLARE_API_TOKEN`
+- `PORT` (optional, default is 8787)
 
-### 3. Deploy Worker
+### 3. Start server
 
-From the `cloudflare` folder:
+Run in project root:
 
-`wrangler deploy`
+`npm start`
 
-Copy the deployed Worker URL (example: `https://fuel-verify-ai.<subdomain>.workers.dev`).
+Server runs at `http://localhost:8787` and serves both frontend and API.
 
-### 4. Connect Frontend to Worker
+### 4. Open app
 
-Open `index.html` and set:
+Open:
 
-`window.FUEL_VERIFY_AI_ENDPOINT = "YOUR_WORKER_URL";`
+`http://localhost:8787`
 
-Example:
-
-`window.FUEL_VERIFY_AI_ENDPOINT = "https://fuel-verify-ai.<subdomain>.workers.dev";`
-
-### 5. Use AI Insight in App
+### 5. Use AI Insight
 
 - Add records in the app
 - Go to Overview
@@ -75,5 +73,5 @@ Example:
 - `index.html` : App layout and sections
 - `styles.css` : Styling and responsive design
 - `app.js` : Form handling, storage, overview metrics, and records table
-- `cloudflare/worker.js` : Cloudflare Worker proxy for Workers AI
-- `cloudflare/wrangler.toml` : Wrangler configuration for deployment
+- `server.js` : Node.js API proxy and static server
+- `.env.example` : Required environment variables
